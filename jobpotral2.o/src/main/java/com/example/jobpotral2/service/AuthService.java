@@ -11,4 +11,5 @@ public interface AuthService {
     AuthResponse login(LoginRequest request);
 
     UserResponse getProfile(String email);
+
 }

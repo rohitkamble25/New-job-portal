@@ -35,3 +35,11 @@ build/
 
 
 uploads/
+
+# Local configuration and secrets
+application-local.properties
+.env
+.env.*
+!.env.example
+
+src/main/resources/application.properties

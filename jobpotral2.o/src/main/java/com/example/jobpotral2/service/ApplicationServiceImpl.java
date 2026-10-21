@@ -79,21 +79,55 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ApplicationResponse updateApplicationStatus(Long applicationId, ApplicationStatus status,
-            String employerNotes, String employerEmail) {
+    public ApplicationResponse updateApplicationStatus(
+            Long applicationId,
+            ApplicationStatus status,
+            String employerNotes,
+            String employerEmail) {
+
         User employer = getUser(employerEmail);
         JobApplication application = getApplication(applicationId);
 
-        if (!application.getJob().getPostedBy().getId().equals(employer.getId())) {
-            throw new UnauthorizedException("You don't have permission to update this application");
+        if (!application.getJob().getPostedBy().getId()
+                .equals(employer.getId())) {
+            throw new UnauthorizedException(
+                    "You don't have permission to update this application");
+        }
+
+        if (status == null) {
+            throw new BadRequestException(
+                    "Application status is required");
+        }
+
+        ApplicationStatus currentStatus = application.getStatus();
+
+        if (currentStatus == ApplicationStatus.ACCEPTED
+                || currentStatus == ApplicationStatus.REJECTED) {
+            throw new BadRequestException(
+                    "Accepted or rejected applications cannot be processed further");
+        }
+
+        if (currentStatus == ApplicationStatus.SHORTLISTED
+                && status != ApplicationStatus.ACCEPTED
+                && status != ApplicationStatus.REJECTED) {
+            throw new BadRequestException(
+                    "Shortlisted applications can only be accepted or rejected");
+        }
+
+        if (currentStatus == ApplicationStatus.REVIEWED
+                && status == ApplicationStatus.PENDING) {
+            throw new BadRequestException(
+                    "Reviewed applications cannot be moved back to pending");
         }
 
         application.setStatus(status);
+
         if (employerNotes != null) {
             application.setEmployerNotes(employerNotes);
         }
 
-        return ApplicationResponse.from(applicationRepo.save(application));
+        return ApplicationResponse.from(
+                applicationRepo.save(application));
     }
 
     @Override

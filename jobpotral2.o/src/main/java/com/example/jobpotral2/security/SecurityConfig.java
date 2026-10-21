@@ -50,18 +50,21 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_URLS).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/uploads/resumes/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/jobs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/companies/**").permitAll()
 
                         .requestMatchers("/api/applications/apply").hasAuthority("ROLE_JOBSEEKER")
                         .requestMatchers("/api/applications/my/**").hasAuthority("ROLE_JOBSEEKER")
                         .requestMatchers("/api/profile/resume").hasAuthority("ROLE_JOBSEEKER")
-
+                        .requestMatchers(HttpMethod.GET, "/api/users/resume/view/**")
+                        .hasAuthority("ROLE_JOBSEEKER")
                         .requestMatchers(HttpMethod.POST, "/api/jobs/**").hasAuthority("ROLE_EMPLOYER")
                         .requestMatchers(HttpMethod.PUT, "/api/jobs/**").hasAuthority("ROLE_EMPLOYER")
                         .requestMatchers(HttpMethod.DELETE, "/api/jobs/**").hasAuthority("ROLE_EMPLOYER")
                         .requestMatchers("/api/companies/**").hasAuthority("ROLE_EMPLOYER")
 
+                        .requestMatchers("/api/admin/register", "/api/admin/login").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
 
                         .anyRequest().authenticated())

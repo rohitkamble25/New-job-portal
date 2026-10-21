@@ -13,5 +13,6 @@ public interface CompanyRepo extends JpaRepository<Company, Long> {
     List<Company> findByIsApproved(boolean isApproved);
 
     boolean existsByNameAndEmployer(String name, User employer);
-
+    
+    boolean existsByEmployer(User employer);
 }

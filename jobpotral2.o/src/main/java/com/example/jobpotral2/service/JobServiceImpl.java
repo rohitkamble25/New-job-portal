@@ -102,18 +102,13 @@ public class JobServiceImpl implements JobService {
         return jobRepo.findByIsActiveTrue(pageable).map(JobResponse::from);
     }
 
-   @Override
-public Page<JobResponse> searchJobs(
-        String keyword,
-        String location,
-        JobType jobType,
-        Double minSalary,
-        Pageable pageable) {
+    @Override
+    public Page<JobResponse> searchJobs(String keyword, String location, JobType jobType, Double minSalary,
+            Pageable pageable) {
 
-    return jobRepo
-            .findByIsActiveTrueAndTitleContainingIgnoreCase(keyword, pageable)
-            .map(JobResponse::from);
-}
+        return jobRepo.searchJobs(keyword, location, jobType, minSalary, pageable)
+                .map(JobResponse::from);
+    }
 
     @Override
     public void toggleJobStatus(Long jobId, String employerEmail) {

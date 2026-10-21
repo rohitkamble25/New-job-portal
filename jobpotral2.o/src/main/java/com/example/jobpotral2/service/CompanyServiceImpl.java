@@ -1,3 +1,4 @@
+
 package com.example.jobpotral2.service;
 
 import java.util.List;
@@ -27,8 +28,8 @@ public class CompanyServiceImpl implements CompanyService {
     public CompanyResponse createCompany(CompanyRequest request, String employerEmail) {
         User employer = getUser(employerEmail);
 
-        if (companyRepo.existsByNameAndEmployer(request.name(), employer)) {
-            throw new BadRequestException("You already have a company with this name");
+        if (companyRepo.existsByEmployer(employer)) {
+            throw new BadRequestException("You can create only one company per employer");
         }
 
         Company company = Company.builder()
@@ -40,8 +41,8 @@ public class CompanyServiceImpl implements CompanyService {
                 .employer(employer)
                 .isApproved(false)
                 .build();
-        return CompanyResponse.from(companyRepo.save(company));
 
+        return CompanyResponse.from(companyRepo.save(company));
     }
 
     @Override
@@ -74,30 +75,38 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<CompanyResponse> getAllCompanies() {
-        return companyRepo.findByIsApproved(true).stream().map(CompanyResponse::from).toList();
+        return companyRepo.findAll()
+                .stream()
+                .map(CompanyResponse::from)
+                .toList();
     }
 
     @Override
     public List<CompanyResponse> getMyCompanies(String employerEmail) {
         User employer = getUser(employerEmail);
-        return companyRepo.findByEmployer(employer).stream().map(CompanyResponse::from).toList();
+
+        return companyRepo.findByEmployer(employer)
+                .stream()
+                .map(CompanyResponse::from)
+                .toList();
     }
 
     @Override
     public CompanyResponse approveCompany(Long companyId) {
         Company company = getCompany(companyId);
         company.setApproved(true);
+
         return CompanyResponse.from(companyRepo.save(company));
     }
 
     private User getUser(String email) {
         return userRepo.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found:" + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
     }
 
     private Company getCompany(Long id) {
         return companyRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Company not found with id:" + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Company not found with id: " + id));
     }
 
     private void verifyOwner(Company company, User employer) {

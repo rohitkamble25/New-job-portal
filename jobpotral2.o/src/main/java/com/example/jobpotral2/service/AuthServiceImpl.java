@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse register(RegisterRequest request) {
         if (userRepo.existsByEmail(request.email())) {
-            throw new BadRequestException("Email Already Registered" + request.email());
+            throw new BadRequestException(" Email Already Registered " + request.email());
         }
 
         User user = User.builder()
