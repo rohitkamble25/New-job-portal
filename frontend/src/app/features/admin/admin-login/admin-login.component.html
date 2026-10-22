@@ -1,0 +1,35 @@
+<div class="login-container">
+  <form class="login-card" (ngSubmit)="onSubmit()">
+    <h2>Admin Login</h2>
+    <p>Sign in to access the admin dashboard.</p>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        placeholder="Enter admin email"
+        required
+        email
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        placeholder="Enter password"
+        required
+      />
+    </div>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Signing in...' : 'Login' }}
+    </button>
+  </form>
+</div>

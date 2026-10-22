@@ -1,0 +1,239 @@
+@use 'tokens' as t;
+@use 'mixins' as m;
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: t.$space-2;
+  font-size: 13px;
+  color: t.$text-mute;
+  margin-bottom: t.$space-3;
+
+  a {
+    color: t.$ink;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.page-header {
+  margin-bottom: t.$space-6;
+
+  h1 {
+    margin-bottom: 4px;
+  }
+
+  p {
+    font-size: 13.5px;
+    color: t.$text-mute;
+  }
+}
+
+.form-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: t.$space-6;
+  align-items: flex-start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: t.$space-4;
+}
+
+.form-card {
+  @include m.card;
+  padding: t.$space-6;
+  @include m.fade-in;
+
+  h3 {
+    font-size: 15px;
+    margin-bottom: t.$space-5;
+    padding-bottom: t.$space-3;
+    border-bottom: 1px solid t.$border;
+  }
+
+  display: flex;
+  flex-direction: column;
+  gap: t.$space-4;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: t.$space-4;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  @include m.form-group;
+}
+
+input {
+  @include m.input-base;
+
+  &.error {
+    border-color: t.$rejected;
+  }
+}
+
+select {
+  @include m.select-base;
+
+  &.error {
+    border-color: t.$rejected;
+  }
+}
+
+textarea {
+  @include m.textarea-base;
+  min-height: 140px;
+
+  &.error {
+    border-color: t.$rejected;
+  }
+}
+
+.required {
+  color: t.$rejected;
+  margin-left: 2px;
+}
+
+.hint {
+  font-size: 12px;
+  color: t.$text-faint;
+  margin-top: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: t.$space-3;
+  padding-top: t.$space-2;
+}
+
+.btn-cancel {
+  @include m.btn-ghost;
+  text-decoration: none;
+  height: 44px;
+  padding: 0 t.$space-5;
+}
+
+.btn-submit {
+  @include m.btn-primary;
+  min-width: 140px;
+  height: 44px;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tips-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: t.$space-4;
+  position: sticky;
+  top: 80px;
+}
+
+.tips-card {
+  @include m.card;
+  padding: t.$space-5;
+
+  h4 {
+    font-size: 13.5px;
+    margin-bottom: t.$space-4;
+    padding-bottom: t.$space-3;
+    border-bottom: 1px solid t.$border;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: t.$space-3;
+  }
+
+  li {
+    font-size: 13px;
+    color: t.$text-mute;
+    line-height: 1.6;
+    padding-left: t.$space-3;
+    border-left: 2px solid t.$amber;
+
+    strong {
+      color: t.$text;
+    }
+  }
+}
+
+.company-preview {
+  @include m.card;
+  padding: t.$space-4;
+
+  h4 {
+    font-size: 12.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: t.$text-faint;
+    margin-bottom: t.$space-3;
+  }
+}
+
+.company-info {
+  display: flex;
+  align-items: center;
+  gap: t.$space-3;
+}
+
+.company-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: t.$radius-md;
+  background: linear-gradient(135deg, t.$ink, t.$ink-light);
+  color: white;
+  font-family: t.$font-display;
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.company-name {
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.company-location {
+  font-size: 12.5px;
+  color: t.$text-mute;
+  margin-top: 2px;
+}

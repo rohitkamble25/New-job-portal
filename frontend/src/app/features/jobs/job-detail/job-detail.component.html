@@ -1,0 +1,283 @@
+<div class="page">
+  <div class="container">
+
+    <app-loader *ngIf="loading" label="Loading job details..."></app-loader>
+
+    <ng-container *ngIf="!loading && job">
+
+      <div class="breadcrumb">
+        <a routerLink="/jobs">Jobs</a>
+        <span>/</span>
+        <span>{{ job.title }}</span>
+      </div>
+
+      <div class="layout">
+
+        <div class="detail-main">
+
+          <div class="header-card">
+            <div class="company-logo">
+              {{ job.companyName[0] }}
+            </div>
+
+            <div class="header-info">
+              <h1>{{ job.title }}</h1>
+              <p class="company-name">{{ job.companyName }}</p>
+
+              <div class="header-meta">
+                <span class="meta-pill">{{ jobTypeLabel }}</span>
+                <span class="meta-pill">{{ job.location }}</span>
+
+                <span
+                  class="meta-pill salary"
+                  *ngIf="job.salaryMin || job.salaryMax">
+                  {{ formatSalary() }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-item">
+              <span class="info-label">Experience</span>
+              <span class="info-val">
+                {{ job.experience || 'Not specified' }}
+              </span>
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Vacancies</span>
+              <span class="info-val">{{ job.vacancies }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Last date</span>
+              <span class="info-val">
+                {{ job.lastDate ? (job.lastDate | date:'dd MMM yyyy') : 'Open' }}
+              </span>
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Posted</span>
+              <span class="info-val">{{ daysAgo }}</span>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Job description</h3>
+            <p class="description">{{ job.description }}</p>
+          </div>
+
+          <div class="section" *ngIf="skillList.length">
+            <h3>Required skills</h3>
+
+            <div class="skills">
+              <span
+                class="skill"
+                *ngFor="let skill of skillList">
+                {{ skill }}
+              </span>
+            </div>
+          </div>
+
+          <div class="employer-actions" *ngIf="isOwner">
+            <button class="btn-edit" (click)="editJob()">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              Edit job
+            </button>
+
+            <button
+              class="btn-delete"
+              (click)="deleteJob()"
+              [disabled]="deleting">
+
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+              </svg>
+
+              {{ deleting ? 'Deleting...' : 'Delete job' }}
+            </button>
+          </div>
+
+        </div>
+
+        <aside class="apply-sidebar">
+          <div class="apply-card">
+
+            <h3>Interested in this role?</h3>
+
+            <p>
+              Apply now and track your application status in real time.
+            </p>
+
+            <button
+              class="btn-apply"
+              *ngIf="isJobSeeker"
+              (click)="openApplyModal()">
+              Apply for this job
+            </button>
+
+            <div *ngIf="!auth.isLoggedIn()">
+              <button
+                class="btn-apply"
+                (click)="openApplyModal()">
+                Log in to apply
+              </button>
+
+              <p class="no-account">
+                No account?
+                <a routerLink="/register">Sign up free</a>
+              </p>
+            </div>
+
+            <div class="owner-note" *ngIf="isOwner">
+              <p>This is your job posting.</p>
+
+              <a
+                [routerLink]="['/employer/applicants', job.id]"
+                class="btn-view-apps">
+                View applicants
+              </a>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="company-mini">
+              <span class="company-avatar">
+                {{ job.companyName[0] }}
+              </span>
+
+              <div>
+                <p class="cm-name">{{ job.companyName }}</p>
+                <p class="cm-location">{{ job.location }}</p>
+              </div>
+            </div>
+
+            <p class="posted-by">
+              Posted by <strong>{{ job.postedByName }}</strong>
+            </p>
+
+          </div>
+        </aside>
+
+      </div>
+
+    </ng-container>
+  </div>
+</div>
+
+<div
+  class="modal-overlay"
+  *ngIf="showApplyModal"
+  (click)="closeApplyModal()">
+
+  <div
+    class="modal"
+    (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3>Apply for {{ job?.title }}</h3>
+
+      <button
+        class="modal-close"
+        (click)="closeApplyModal()"
+        aria-label="Close">
+
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <p class="modal-company">
+        {{ job?.companyName }} · {{ job?.location }}
+      </p>
+
+      <div class="form-group">
+        <label for="coverLetter">
+          Cover letter
+          <span class="optional">(optional)</span>
+        </label>
+
+        <textarea
+          id="coverLetter"
+          [(ngModel)]="coverLetter"
+          placeholder="Tell the employer why you're a great fit for this role..."
+          rows="5">
+        </textarea>
+      </div>
+
+      <div class="modal-note">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#6B7280"
+          stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+
+        Your saved resume will be attached automatically.
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+
+      <button
+        class="btn-cancel"
+        (click)="closeApplyModal()">
+        Cancel
+      </button>
+
+      <button
+        class="btn-submit"
+        (click)="submitApplication()"
+        [disabled]="applying">
+
+        <span *ngIf="!applying">
+          Submit application
+        </span>
+
+        <span
+          *ngIf="applying"
+          class="spinner"
+          aria-hidden="true">
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+</div>

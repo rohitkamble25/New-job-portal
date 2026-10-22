@@ -1,0 +1,199 @@
+@use 'tokens' as t;
+@use 'mixins' as m;
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: t.$space-6;
+
+  h1 { margin-bottom: 4px; }
+  p { font-size: 13.5px; color: t.$text-mute; }
+}
+
+.header-actions {
+  display: flex;
+  gap: t.$space-3;
+}
+
+.btn-company {
+  @include m.btn-secondary;
+  gap: t.$space-2;
+  text-decoration: none;
+  height: 38px;
+  font-size: 13.5px;
+}
+
+.btn-post {
+  @include m.btn-primary;
+  gap: t.$space-2;
+  text-decoration: none;
+  height: 38px;
+  font-size: 13.5px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: t.$space-4;
+  margin-bottom: t.$space-6;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  @include m.card;
+  padding: t.$space-5;
+  border-left: 4px solid t.$border-strong;
+
+  &.active { border-left-color: t.$success; }
+  &.inactive { border-left-color: t.$text-faint; }
+}
+
+.stat-num {
+  display: block;
+  font-family: t.$font-display;
+  font-size: 32px;
+  font-weight: 600;
+  color: t.$text;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: t.$text-mute;
+}
+
+.section-label {
+  @include m.section-label;
+}
+
+.job-row {
+  @include m.status-card(t.$ink);
+  @include m.fade-in;
+  padding: t.$space-4 t.$space-5;
+  margin-bottom: t.$space-3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: t.$space-4;
+
+  &.inactive {
+    border-left-color: t.$text-faint;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.job-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.job-title-row {
+  display: flex;
+  align-items: center;
+  gap: t.$space-2;
+  margin-bottom: 4px;
+
+  h4 { font-size: 14.5px; }
+}
+
+.status-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: t.$radius-pill;
+
+  &.active {
+    background: t.$success-bg;
+    color: t.$success;
+  }
+
+  &.inactive {
+    background: t.$skill-bg;
+    color: t.$skill-text;
+  }
+}
+
+.job-meta {
+  font-size: 13px;
+  color: t.$text-mute;
+  margin-bottom: 3px;
+}
+
+.job-salary {
+  font-size: 12.5px;
+  font-family: t.$font-mono;
+  color: t.$success;
+}
+
+.job-actions {
+  display: flex;
+  align-items: center;
+  gap: t.$space-2;
+  flex-shrink: 0;
+}
+
+.btn-applicants {
+  @include m.btn-ghost;
+  font-size: 12.5px;
+  height: 34px;
+  gap: t.$space-1;
+  text-decoration: none;
+}
+
+.btn-edit {
+  @include m.btn-ghost;
+  font-size: 12.5px;
+  height: 34px;
+  gap: t.$space-1;
+  text-decoration: none;
+}
+
+.btn-toggle {
+  @include m.btn-base;
+  font-size: 12px;
+  height: 34px;
+  padding: 0 t.$space-3;
+  background: t.$success-bg;
+  color: t.$success;
+  border: 1px solid t.$success;
+
+  &.deactivate {
+    background: t.$skill-bg;
+    color: t.$skill-text;
+    border-color: t.$border-strong;
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 0.85;
+  }
+}
+
+.btn-delete {
+  @include m.btn-danger;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+
+  svg {
+    stroke: currentColor;
+  }
+}
+
+.btn-first-job {
+  @include m.btn-primary;
+  text-decoration: none;
+  height: 42px;
+  padding: 0 t.$space-6;
+  margin-top: t.$space-4;
+  display: inline-flex;
+  align-items: center;
+}

@@ -1,0 +1,204 @@
+<div class="page">
+  <div class="container">
+    <app-loader *ngIf="loading" label="Loading company details..."></app-loader>
+
+    <ng-container *ngIf="!loading">
+      <div class="page-header">
+        <div class="breadcrumb">
+          <a routerLink="/employer/dashboard">Dashboard</a>
+          <span>/</span>
+          <span>{{ isEditMode ? 'Edit company' : 'Register company' }}</span>
+        </div>
+
+        <h1>{{ isEditMode ? 'Update company' : 'Register your company' }}</h1>
+
+        <p>
+          {{ isEditMode
+            ? 'Keep your company profile up to date'
+            : 'Register your company to start posting jobs' }}
+        </p>
+      </div>
+
+      <div class="approval-banner" *ngIf="existingCompany">
+        <div
+          class="banner"
+          [class.approved]="existingCompany.isApproved"
+          [class.pending]="!existingCompany.isApproved">
+
+          <ng-container *ngIf="existingCompany.isApproved">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="#1E8E5A" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>Your company is <strong>approved</strong> — you can post jobs</span>
+          </ng-container>
+
+          <ng-container *ngIf="!existingCompany.isApproved">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="#9A6313" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>
+              Your company is <strong>pending admin approval</strong>.
+              You'll be able to post jobs once approved.
+            </span>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="form-layout">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <div class="form-card">
+            <h3>Company information</h3>
+
+            <div class="form-group">
+              <label for="name">
+                Company name <span class="required">*</span>
+              </label>
+              <input
+                id="name"
+                type="text"
+                formControlName="name"
+                placeholder="e.g. TechCorp Solutions"
+                [class.error]="name.invalid && name.touched"
+              />
+              <span
+                class="error-msg"
+                *ngIf="name.touched && name.hasError('required')">
+                Company name is required
+              </span>
+              <span
+                class="error-msg"
+                *ngIf="name.touched && name.hasError('minlength')">
+                Name must be at least 2 characters
+              </span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="location">
+                  Location <span class="required">*</span>
+                </label>
+                <input
+                  id="location"
+                  type="text"
+                  formControlName="location"
+                  placeholder="e.g. Pune, Maharashtra"
+                  [class.error]="location.invalid && location.touched"
+                />
+                <span
+                  class="error-msg"
+                  *ngIf="location.touched && location.hasError('required')">
+                  Location is required
+                </span>
+              </div>
+
+              <div class="form-group">
+                <label for="industry">Industry</label>
+                <select id="industry" formControlName="industry">
+                  <option value="">Select industry</option>
+                  <option *ngFor="let ind of industries" [value]="ind">
+                    {{ ind }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="website">Website</label>
+              <input
+                id="website"
+                type="url"
+                formControlName="website"
+                placeholder="https://yourcompany.com"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="description">Company description</label>
+              <textarea
+                id="description"
+                formControlName="description"
+                placeholder="Tell candidates about your company — culture, mission, what you build..."
+                rows="5">
+              </textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a routerLink="/employer/dashboard" class="btn-cancel">
+              Cancel
+            </a>
+
+            <button
+              type="submit"
+              class="btn-submit"
+              [disabled]="saving || form.invalid">
+              <span *ngIf="!saving">
+                {{ isEditMode ? 'Update company' : 'Register company' }}
+              </span>
+              <span *ngIf="saving" class="spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+        </form>
+
+        <aside class="info-sidebar">
+          <div class="info-card">
+            <h4>What happens next?</h4>
+
+            <div class="steps">
+              <div class="step">
+                <div class="step-dot done">1</div>
+                <div class="step-content">
+                  <p class="step-title">Register company</p>
+                  <p class="step-desc">Fill in your company details and submit</p>
+                </div>
+              </div>
+
+              <div class="step-line"></div>
+
+              <div class="step">
+                <div
+                  class="step-dot"
+                  [class.done]="existingCompany?.isApproved">
+                  2
+                </div>
+                <div class="step-content">
+                  <p class="step-title">Admin review</p>
+                  <p class="step-desc">Our team reviews your company profile</p>
+                </div>
+              </div>
+
+              <div class="step-line"></div>
+
+              <div class="step">
+                <div
+                  class="step-dot"
+                  [class.done]="existingCompany?.isApproved">
+                  3
+                </div>
+                <div class="step-content">
+                  <p class="step-title">Start posting jobs</p>
+                  <p class="step-desc">Once approved, post unlimited jobs</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h4>Profile tips</h4>
+
+            <ul class="tip-list">
+              <li>Add a clear company description to attract better candidates</li>
+              <li>Include your website so candidates can research your company</li>
+              <li>Specify your industry to appear in relevant searches</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </ng-container>
+  </div>
+</div>

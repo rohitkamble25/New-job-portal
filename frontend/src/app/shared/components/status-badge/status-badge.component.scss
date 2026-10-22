@@ -1,0 +1,17 @@
+@use 'tokens' as t;
+@use 'mixins' as m;
+
+.badge {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: t.$radius-sm;
+  white-space: nowrap;
+  display: inline-block;
+
+  &.pending     { @include m.badge-pending; }
+  &.reviewed    { @include m.badge-reviewed; }
+  &.shortlisted { @include m.badge-shortlisted; }
+  &.accepted    { @include m.badge-accepted; }
+  &.rejected    { @include m.badge-rejected; }
+}

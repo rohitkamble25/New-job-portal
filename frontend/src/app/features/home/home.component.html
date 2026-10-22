@@ -1,0 +1,181 @@
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">🚀 India's growing job platform</div>
+
+      <h1>
+        Find your next<br>
+        <span class="highlight">dream job</span>
+      </h1>
+
+      <p class="hero-sub">
+        Search thousands of jobs from top companies across India.
+        Your next opportunity is one search away.
+      </p>
+
+      <div class="search-bar">
+        <div class="search-field">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#9CA3AF"
+            stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+
+          <input
+            type="text"
+            [(ngModel)]="keyword"
+            placeholder="Job title, skill, or keyword"
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+
+        <div class="search-divider"></div>
+
+        <div class="search-field">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#9CA3AF"
+            stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+
+          <input
+            type="text"
+            [(ngModel)]="location"
+            placeholder="City or state"
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+
+        <button class="search-btn" (click)="onSearch()">
+          Search jobs
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-inner">
+      <div class="stat" *ngFor="let stat of stats">
+        <span class="stat-value">{{ stat.value }}+</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="featured-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2>Latest opportunities</h2>
+        <p>Fresh jobs posted in the last 7 days</p>
+      </div>
+
+      <a routerLink="/jobs" class="see-all">
+        View all jobs
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+
+    <ng-container *ngIf="loading; else jobsContent">
+      <app-loader label="Fetching latest jobs..."></app-loader>
+    </ng-container>
+
+    <ng-template #jobsContent>
+      <div class="jobs-grid">
+        <app-job-card
+          *ngFor="let job of featuredJobs; let i = index"
+          [job]="job"
+          [animationDelay]="i * 60"
+          (apply)="onApply($event)">
+        </app-job-card>
+      </div>
+
+      <div class="browse-cta">
+        <a routerLink="/jobs" class="btn-browse">
+          Browse all jobs
+        </a>
+      </div>
+    </ng-template>
+  </div>
+</section>
+
+<section class="how-it-works">
+  <div class="container">
+    <h2 class="text-center">How it works</h2>
+
+    <p class="section-sub text-center">
+      Get hired in 3 simple steps
+    </p>
+
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Create your profile</h4>
+        <p>
+          Sign up as a job seeker, upload your resume and fill in your skills
+          and experience.
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Find the right job</h4>
+        <p>
+          Browse and search through hundreds of active job listings filtered
+          by role, location and salary.
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Apply and get hired</h4>
+        <p>
+          Apply in one click with your profile, track application status and
+          get notified when employers respond.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner" *ngIf="!auth.isLoggedIn()">
+  <div class="container">
+    <div class="cta-inner">
+      <div>
+        <h2>Ready to find your next role?</h2>
+        <p>Join thousands of job seekers already using JobPortal</p>
+      </div>
+
+      <div class="cta-actions">
+        <a routerLink="/register" class="btn-cta-primary">
+          Get started free
+        </a>
+
+        <a routerLink="/jobs" class="btn-cta-secondary">
+          Browse jobs
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

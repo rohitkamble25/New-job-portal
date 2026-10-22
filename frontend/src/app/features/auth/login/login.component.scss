@@ -1,0 +1,154 @@
+@use 'tokens' as t;
+@use 'mixins' as m;
+.auth-page{
+    min-height: calc(100vh - 60vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: t.$space-6;
+    background: t.$bg;
+}
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: t.$surface;
+  border: 1px solid t.$border;
+  border-radius: t.$radius-lg;
+  padding: t.$space-8;
+  @include m.fade-in;
+}
+.auth-header {
+  text-align: center;
+  margin-bottom: t.$space-6;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: t.$space-2;
+  font-family: t.$font-display;
+  font-weight: 600;
+  font-size: 16px;
+  color: t.$ink;
+  margin-bottom: t.$space-5;
+
+  svg { flex-shrink: 0; }
+}
+
+.auth-header h1 {
+  font-size: 22px;
+  margin-bottom: t.$space-1;
+}
+
+.auth-header p {
+  font-size: 13.5px;
+  color: t.$text-mute;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: t.$space-4;
+}
+
+.form-group {
+  @include m.form-group;
+}
+
+input {
+  @include m.input-base;
+
+  &.error {
+    border-color: t.$rejected;
+  }
+}
+
+.input-wrap {
+  position: relative;
+
+  input {
+    padding-right: 42px;
+  }
+}
+
+.toggle-pw {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: t.$text-mute;
+  display: flex;
+  align-items: center;
+  padding: 0;
+
+  &:hover { color: t.$text; }
+}
+
+.btn-submit {
+  @include m.btn-primary;
+  width: 100%;
+  height: 44px;
+  font-size: 15px;
+  margin-top: t.$space-2;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: t.$space-5;
+  font-size: 13.5px;
+  color: t.$text-mute;
+
+  a {
+    color: t.$ink;
+    font-weight: 500;
+    margin-left: 4px;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+.admin-login-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #eeeae4;
+  font-size: 13px;
+  color: #667085;
+}
+
+.admin-login-link a {
+  color: #1b3a6b;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.admin-login-link a:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .admin-login-link {
+    flex-wrap: wrap;
+  }
+}

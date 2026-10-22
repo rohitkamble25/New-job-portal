@@ -1,0 +1,58 @@
+@use 'tokens' as t;
+@use 'mixins' as m;
+
+.toast-wrap {
+  position: fixed;
+  top: 76px;
+  right: t.$space-5;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: t.$space-2;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: t.$space-2;
+  min-width: 260px;
+  max-width: 360px;
+  padding: t.$space-3 t.$space-4;
+  border-radius: t.$radius-md;
+  background: t.$surface;
+  border: 1px solid t.$border;
+  border-left: 4px solid t.$ink;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  font-size: 13.5px;
+  @include m.fade-in;
+
+  &.success { border-left-color: t.$success; }
+  &.error { border-left-color: t.$rejected; }
+  &.info { border-left-color: t.$ink; }
+
+  i {
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  &.success i { color: t.$success; }
+  &.error i { color: t.$rejected; }
+  &.info i { color: t.$ink; }
+
+  span {
+    flex: 1;
+  }
+
+  button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: t.$text-faint;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+
+    &:hover {
+      color: t.$text;
+    }
+  }
+}

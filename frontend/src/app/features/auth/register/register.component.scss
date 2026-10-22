@@ -1,0 +1,170 @@
+@use 'tokens' as t;
+@use 'mixins' as m;
+
+.auth-page {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: t.$space-6;
+  background: t.$bg;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+  background: t.$surface;
+  border: 1px solid t.$border;
+  border-radius: t.$radius-lg;
+  padding: t.$space-8;
+  @include m.fade-in;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: t.$space-6;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: t.$space-2;
+  font-family: t.$font-display;
+  font-weight: 600;
+  font-size: 16px;
+  color: t.$ink;
+  margin-bottom: t.$space-5;
+}
+
+.auth-header h1 {
+  font-size: 22px;
+  margin-bottom: t.$space-1;
+}
+
+.auth-header p {
+  font-size: 13.5px;
+  color: t.$text-mute;
+}
+
+.role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: t.$space-3;
+  margin-bottom: t.$space-4;
+}
+
+.role-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: t.$space-4 t.$space-3;
+  border: 1.5px solid t.$border;
+  border-radius: t.$radius-md;
+  background: t.$surface;
+  cursor: pointer;
+  transition: all t.$transition-fast;
+  font-family: inherit;
+
+  svg { stroke: t.$text-mute; transition: stroke t.$transition-fast; }
+
+  span {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: t.$text-mute;
+    transition: color t.$transition-fast;
+  }
+
+  small {
+    font-size: 11.5px;
+    color: t.$text-faint;
+  }
+
+  &.active {
+    border-color: t.$ink;
+    background: #EEF3FA;
+
+    svg { stroke: t.$ink; }
+    span { color: t.$ink; }
+  }
+
+  &:hover:not(.active) {
+    border-color: t.$border-strong;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: t.$space-4;
+}
+
+.form-group {
+  @include m.form-group;
+}
+
+input {
+  @include m.input-base;
+  &.error { border-color: t.$rejected; }
+}
+
+.input-wrap {
+  position: relative;
+  input { padding-right: 42px; }
+}
+
+.toggle-pw {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: t.$text-mute;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  &:hover { color: t.$text; }
+}
+
+.optional {
+  font-weight: 400;
+  color: t.$text-faint;
+}
+
+.btn-submit {
+  @include m.btn-primary;
+  width: 100%;
+  height: 44px;
+  font-size: 15px;
+  margin-top: t.$space-2;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: t.$space-5;
+  font-size: 13.5px;
+  color: t.$text-mute;
+
+  a {
+    color: t.$ink;
+    font-weight: 500;
+    margin-left: 4px;
+    &:hover { text-decoration: underline; }
+  }
+}

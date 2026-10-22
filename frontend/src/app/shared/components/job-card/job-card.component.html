@@ -1,0 +1,31 @@
+<div
+  class="job-card"
+  [routerLink]="['/jobs', job.id]"
+  [style.animation-delay]="animationDelay + 'ms'"
+  role="article"
+>
+  <div class="card-left">
+    <div class="title-row">
+      <h4 class="job-title">{{ job.title }}</h4>
+      <span class="new-badge" *ngIf="isNew">NEW</span>
+    </div>
+
+    <p class="company">{{ job.companyName }} · {{ job.location }}</p>
+
+    <div class="meta">
+      <span class="meta-item">{{ jobTypeLabel }}</span>
+      <span class="meta-item" *ngIf="job.experience">{{ job.experience }}</span>
+      <span class="meta-item salary">{{ formatSalary() }}</span>
+    </div>
+
+    <div class="skills" *ngIf="skillList.length">
+      <span class="skill" *ngFor="let skill of skillList.slice(0, 4)">
+        {{ skill }}
+      </span>
+    </div>
+  </div>
+
+  <div class="card-right" *ngIf="showApplyButton">
+    <button class="apply-btn" (click)="onApply($event)">Apply now</button>
+  </div>
+</div>

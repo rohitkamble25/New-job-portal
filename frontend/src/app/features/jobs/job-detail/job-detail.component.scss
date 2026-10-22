@@ -1,0 +1,407 @@
+@use 'tokens' as t;
+@use 'mixins' as m;
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: t.$space-2;
+  font-size: 13px;
+  color: t.$text-mute;
+  margin-bottom: t.$space-5;
+
+  a {
+    color: t.$ink;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: t.$space-6;
+  align-items: flex-start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.header-card {
+  @include m.card;
+  padding: t.$space-6;
+  display: flex;
+  gap: t.$space-5;
+  align-items: flex-start;
+  margin-bottom: t.$space-4;
+  @include m.fade-in;
+}
+
+.company-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: t.$radius-md;
+  background: linear-gradient(135deg, t.$ink, t.$ink-light);
+  color: white;
+  font-family: t.$font-display;
+  font-weight: 600;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header-info {
+  flex: 1;
+
+  h1 {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+}
+
+.company-name {
+  font-size: 14px;
+  color: t.$text-mute;
+  margin-bottom: t.$space-3;
+}
+
+.header-meta {
+  display: flex;
+  gap: t.$space-2;
+  flex-wrap: wrap;
+}
+
+.meta-pill {
+  font-size: 12.5px;
+  padding: 4px 10px;
+  border-radius: t.$radius-pill;
+  background: t.$bg;
+  border: 1px solid t.$border;
+  color: t.$text-mute;
+
+  &.salary {
+    font-family: t.$font-mono;
+    color: t.$success;
+    background: t.$success-bg;
+    border-color: transparent;
+  }
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: t.$space-3;
+  margin-bottom: t.$space-5;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.info-item {
+  @include m.card;
+  padding: t.$space-3 t.$space-4;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: t.$text-faint;
+}
+
+.info-val {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: t.$text;
+}
+
+.section {
+  @include m.card;
+  padding: t.$space-5;
+  margin-bottom: t.$space-4;
+  @include m.fade-in;
+
+  h3 {
+    font-size: 15px;
+    margin-bottom: t.$space-3;
+  }
+}
+
+.description {
+  font-size: 14px;
+  color: t.$text-mute;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: t.$space-2;
+}
+
+.skill {
+  font-size: 12.5px;
+  background: t.$skill-bg;
+  color: t.$skill-text;
+  padding: 5px 12px;
+  border-radius: t.$radius-sm;
+  font-weight: 500;
+}
+
+.employer-actions {
+  display: flex;
+  gap: t.$space-3;
+  margin-top: t.$space-4;
+}
+
+.btn-edit {
+  @include m.btn-secondary;
+  gap: t.$space-2;
+}
+
+.btn-delete {
+  @include m.btn-danger;
+  gap: t.$space-2;
+}
+
+.apply-sidebar {
+  position: sticky;
+  top: 80px;
+}
+
+.apply-card {
+  @include m.card;
+  padding: t.$space-5;
+  @include m.fade-in;
+
+  h3 {
+    font-size: 16px;
+    margin-bottom: t.$space-2;
+  }
+
+  > p {
+    font-size: 13.5px;
+    color: t.$text-mute;
+    margin-bottom: t.$space-4;
+    line-height: 1.6;
+  }
+}
+
+.btn-apply {
+  @include m.btn-primary;
+  width: 100%;
+  height: 44px;
+  font-size: 15px;
+}
+
+.no-account {
+  text-align: center;
+  margin-top: t.$space-3;
+  font-size: 13px;
+  color: t.$text-mute;
+
+  a {
+    color: t.$ink;
+    font-weight: 500;
+  }
+}
+
+.owner-note {
+  text-align: center;
+
+  p {
+    font-size: 13px;
+    color: t.$text-mute;
+    margin-bottom: t.$space-3;
+  }
+}
+
+.btn-view-apps {
+  @include m.btn-secondary;
+  width: 100%;
+  height: 40px;
+  font-size: 13.5px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: t.$border;
+  margin: t.$space-4 0;
+}
+
+.company-mini {
+  display: flex;
+  align-items: center;
+  gap: t.$space-3;
+  margin-bottom: t.$space-3;
+}
+
+.company-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: t.$radius-md;
+  background: t.$ink;
+  color: white;
+  font-family: t.$font-display;
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cm-name {
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.cm-location {
+  font-size: 12.5px;
+  color: t.$text-mute;
+  margin-top: 2px;
+}
+
+.posted-by {
+  font-size: 12.5px;
+  color: t.$text-mute;
+
+  strong {
+    color: t.$text;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: t.$space-4;
+  @include m.fade-in;
+}
+
+.modal {
+  background: t.$surface;
+  border-radius: t.$radius-lg;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: t.$space-5 t.$space-6;
+  border-bottom: 1px solid t.$border;
+
+  h3 {
+    font-size: 17px;
+  }
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: t.$text-mute;
+  display: flex;
+  padding: 4px;
+  border-radius: t.$radius-sm;
+  transition: background t.$transition-fast;
+
+  &:hover {
+    background: t.$bg;
+  }
+}
+
+.modal-body {
+  padding: t.$space-5 t.$space-6;
+}
+
+.modal-company {
+  font-size: 13.5px;
+  color: t.$text-mute;
+  margin-bottom: t.$space-4;
+}
+
+.form-group {
+  @include m.form-group;
+}
+
+textarea {
+  @include m.textarea-base;
+}
+
+.optional {
+  font-weight: 400;
+  color: t.$text-faint;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.modal-note {
+  display: flex;
+  align-items: center;
+  gap: t.$space-2;
+  font-size: 12.5px;
+  color: t.$text-mute;
+  margin-top: t.$space-3;
+  padding: t.$space-3;
+  background: t.$bg;
+  border-radius: t.$radius-md;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: t.$space-3;
+  padding: t.$space-4 t.$space-6;
+  border-top: 1px solid t.$border;
+}
+
+.btn-cancel {
+  @include m.btn-ghost;
+}
+
+.btn-submit {
+  @include m.btn-primary;
+  min-width: 160px;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

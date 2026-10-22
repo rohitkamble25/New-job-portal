@@ -1,0 +1,154 @@
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a routerLink="/" class="logo">
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round">
+        <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path>
+      </svg>
+      <span>JobPortal</span>
+    </a>
+
+    <div class="nav-links">
+      <a routerLink="/jobs" routerLinkActive="active">
+        Browse Jobs
+      </a>
+
+      <ng-container *ngIf="auth.userRole() === Role.JOBSEEKER">
+        <a routerLink="/my-applications" routerLinkActive="active">
+          My Applications
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="auth.userRole() === Role.EMPLOYER">
+        <a routerLink="/employer/dashboard" routerLinkActive="active">
+          Dashboard
+        </a>
+
+        <a routerLink="/employer/post-job" routerLinkActive="active">
+          Post a Job
+        </a>
+
+        <a routerLink="/employer/company" routerLinkActive="active">
+          {{ hasCompany ? 'My Company' : 'Create Company' }}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="auth.userRole() === Role.ADMIN">
+        <a routerLink="/admin" routerLinkActive="active">
+          Admin Panel
+        </a>
+      </ng-container>
+    </div>
+
+    <div class="nav-right">
+      <ng-container *ngIf="!auth.isLoggedIn()">
+        <a routerLink="/login" routerLinkActive="active">
+          Log In
+        </a>
+
+        <a routerLink="/register" routerLinkActive="active">
+          Sign Up Free
+        </a>
+      </ng-container>
+
+      <div class="profile-menu" *ngIf="auth.isLoggedIn()">
+        <button
+          class="avatar-btn"
+          (click)="toggleMenu()"
+          [attr.aria-expanded]="menuOpen"
+          aria-label="Open profile menu">
+          <span class="avatar">{{ initials }}</span>
+
+          <svg
+            class="chevron"
+            [class.open]="menuOpen"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2">
+            <path d="M6 9l6 6 6-6"></path>
+          </svg>
+        </button>
+
+        <div class="dropdown" *ngIf="menuOpen">
+          <div class="dd-header">
+            <p class="dd-name">{{ auth.currentUser()?.name }}</p>
+            <p class="dd-email">{{ auth.currentUser()?.email }}</p>
+          </div>
+
+          <a routerLink="/profile" (click)="closeMenu()">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </a>
+
+          <ng-container *ngIf="auth.userRole() === Role.JOBSEEKER">
+            <a routerLink="/my-applications" (click)="closeMenu()">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              My Applications
+            </a>
+          </ng-container>
+
+          <ng-container *ngIf="auth.userRole() === Role.EMPLOYER">
+            <a routerLink="/employer/dashboard" (click)="closeMenu()">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+              </svg>
+              Dashboard
+            </a>
+          </ng-container>
+
+          <button class="dd-logout" (click)="logout()">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

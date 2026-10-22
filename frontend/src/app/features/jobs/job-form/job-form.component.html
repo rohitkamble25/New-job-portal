@@ -1,0 +1,254 @@
+<div class="page">
+  <div class="container">
+
+    <app-loader *ngIf="loading" label="Loading..."></app-loader>
+
+    <ng-container *ngIf="!loading">
+
+      <div class="page-header">
+        <div>
+          <div class="breadcrumb">
+            <a routerLink="/employer/dashboard">Dashboard</a>
+            <span>/</span>
+            <span>{{ isEditMode ? 'Edit job' : 'Post a job' }}</span>
+          </div>
+          <h1>{{ isEditMode ? 'Edit job posting' : 'Post a new job' }}</h1>
+          <p>
+            {{ isEditMode
+              ? 'Update your job details below'
+              : 'Fill in the details to attract the right candidates' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="form-layout">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+          <div class="form-card">
+            <h3>Basic information</h3>
+
+            <div class="form-group">
+              <label for="title">Job title <span class="required">*</span></label>
+              <input
+                id="title"
+                type="text"
+                formControlName="title"
+                placeholder="e.g. Java Backend Developer"
+                [class.error]="title.invalid && title.touched"
+              />
+              <span class="error-msg" *ngIf="title.touched && title.hasError('required')">
+                Job title is required
+              </span>
+              <span class="error-msg" *ngIf="title.touched && title.hasError('minlength')">
+                Title must be at least 3 characters
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="company">Company <span class="required">*</span></label>
+              <select
+                id="company"
+                formControlName="companyId"
+                [class.error]="companyId.invalid && companyId.touched"
+              >
+                <option *ngFor="let c of companies" [value]="c.id">
+                  {{ c.name }}
+                </option>
+              </select>
+              <span class="error-msg" *ngIf="companyId.touched && companyId.hasError('required')">
+                Please select a company
+              </span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="location">Location <span class="required">*</span></label>
+                <input
+                  id="location"
+                  type="text"
+                  formControlName="location"
+                  placeholder="e.g. Pune, Maharashtra"
+                  [class.error]="location.invalid && location.touched"
+                />
+                <span class="error-msg" *ngIf="location.touched && location.hasError('required')">
+                  Location is required
+                </span>
+              </div>
+
+              <div class="form-group">
+                <label for="jobType">Job type <span class="required">*</span></label>
+                <select
+                  id="jobType"
+                  formControlName="jobType"
+                  [class.error]="jobType.invalid && jobType.touched"
+                >
+                  <option value="" disabled>Select job type</option>
+                  <option *ngFor="let type of jobTypes" [value]="type">
+                    {{ jobTypeLabels[type] }}
+                  </option>
+                </select>
+                <span class="error-msg" *ngIf="jobType.touched && jobType.hasError('required')">
+                  Job type is required
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="description">
+                Job description <span class="required">*</span>
+              </label>
+              <textarea
+                id="description"
+                formControlName="description"
+                placeholder="Describe the role, responsibilities, and what you're looking for..."
+                rows="6"
+                [class.error]="description.invalid && description.touched"
+              ></textarea>
+              <span class="error-msg" *ngIf="description.touched && description.hasError('required')">
+                Description is required
+              </span>
+              <span class="error-msg" *ngIf="description.touched && description.hasError('minlength')">
+                Description must be at least 20 characters
+              </span>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h3>Job details</h3>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="salaryMin">Min. salary (₹/year)</label>
+                <input
+                  id="salaryMin"
+                  type="number"
+                  formControlName="salaryMin"
+                  placeholder="e.g. 400000"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="salaryMax">Max. salary (₹/year)</label>
+                <input
+                  id="salaryMax"
+                  type="number"
+                  formControlName="salaryMax"
+                  placeholder="e.g. 800000"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="experience">Experience required</label>
+                <input
+                  id="experience"
+                  type="text"
+                  formControlName="experience"
+                  placeholder="e.g. 1-3 years"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="vacancies">
+                  Vacancies <span class="required">*</span>
+                </label>
+                <input
+                  id="vacancies"
+                  type="number"
+                  formControlName="vacancies"
+                  min="1"
+                  [class.error]="vacancies.invalid && vacancies.touched"
+                />
+                <span class="error-msg" *ngIf="vacancies.touched && vacancies.hasError('min')">
+                  Must be at least 1
+                </span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="skills">Required skills</label>
+                <input
+                  id="skills"
+                  type="text"
+                  formControlName="skills"
+                  placeholder="e.g. Java, Spring Boot, MySQL"
+                />
+                <span class="hint">Separate skills with commas</span>
+              </div>
+
+              <div class="form-group">
+                <label for="lastDate">Application deadline</label>
+                <input
+                  id="lastDate"
+                  type="date"
+                  formControlName="lastDate"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a routerLink="/employer/dashboard" class="btn-cancel">
+              Cancel
+            </a>
+
+            <button type="submit" class="btn-submit" [disabled]="saving">
+              <span *ngIf="!saving">
+                {{ isEditMode ? 'Update job' : 'Post job' }}
+              </span>
+              <span *ngIf="saving" class="spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+
+        </form>
+
+        <aside class="tips-sidebar">
+          <div class="tips-card">
+            <h4>Tips for a great job post</h4>
+            <ul>
+              <li>
+                <strong>Be specific</strong> with the job title —
+                "Java Backend Developer" gets more clicks than "Developer"
+              </li>
+              <li>
+                <strong>List salary range</strong> — posts with salary
+                get 3x more applications
+              </li>
+              <li>
+                <strong>Detail the skills</strong> — candidates filter
+                by skills so be thorough
+              </li>
+              <li>
+                <strong>Set a deadline</strong> — creates urgency and
+                filters serious applicants
+              </li>
+              <li>
+                <strong>Write a clear description</strong> — include
+                responsibilities, requirements, and perks
+              </li>
+            </ul>
+          </div>
+
+          <div class="company-preview" *ngIf="companies.length > 0">
+            <h4>Posting as</h4>
+
+            <div class="company-info">
+              <div class="company-avatar">
+                {{ companies[0].name[0] }}
+              </div>
+
+              <div>
+                <p class="company-name">{{ companies[0].name }}</p>
+                <p class="company-location">{{ companies[0].location }}</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </ng-container>
+
+  </div>
+</div>

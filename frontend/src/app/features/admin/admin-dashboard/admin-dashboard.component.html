@@ -1,0 +1,278 @@
+<div class="page">
+  <div class="container">
+
+    <div class="page-header">
+  <div>
+    <h1>Admin dashboard</h1>
+    <p>Manage companies and users across the platform</p>
+  </div>
+
+  <button type="button" class="btn-logout" (click)="logout()">
+    Logout
+  </button>
+</div>
+
+    <div class="summary-row">
+      <div class="summary-card">
+        <span class="summary-num">{{ companies.length }}</span>
+        <span class="summary-label">Total companies</span>
+      </div>
+      <div class="summary-card warning">
+        <span class="summary-num">{{ pendingCompanies.length }}</span>
+        <span class="summary-label">Pending approval</span>
+      </div>
+      <div class="summary-card success">
+        <span class="summary-num">{{ approvedCompanies.length }}</span>
+        <span class="summary-label">Approved</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-num">{{ users.length }}</span>
+        <span class="summary-label">Total users</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-num">{{ totalSeekers }}</span>
+        <span class="summary-label">Job seekers</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-num">{{ totalEmployers }}</span>
+        <span class="summary-label">Employers</span>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button
+        class="tab"
+        [class.active]="activeTab === 'companies'"
+        (click)="switchTab('companies')">
+        Companies
+        <span class="tab-badge" *ngIf="pendingCompanies.length > 0">
+          {{ pendingCompanies.length }}
+        </span>
+      </button>
+
+      <button
+        class="tab"
+        [class.active]="activeTab === 'users'"
+        (click)="switchTab('users')">
+        Users
+      </button>
+    </div>
+
+    <div class="tab-content" *ngIf="activeTab === 'companies'">
+
+      <app-loader
+        *ngIf="companiesLoading"
+        label="Loading companies...">
+      </app-loader>
+
+      <ng-container *ngIf="!companiesLoading">
+
+        <div class="section-label" *ngIf="pendingCompanies.length > 0">
+          Pending approval ({{ pendingCompanies.length }})
+        </div>
+
+        <div
+          class="company-row pending"
+          *ngFor="let company of pendingCompanies; let i = index"
+          [style.animation-delay]="i * 40 + 'ms'">
+
+          <div class="company-left">
+            <div class="company-avatar">
+              {{ company.name?.charAt(0) }}
+            </div>
+
+            <div class="company-info">
+              <h4>{{ company.name }}</h4>
+
+              <p class="company-meta">
+                {{ company.industry || 'Industry not specified' }}
+                · {{ company.location }}
+              </p>
+
+              <p class="company-employer">
+                Registered by <strong>{{ company.employerName }}</strong>
+                · {{ formatDate(company.createdAt) }}
+              </p>
+
+              <p class="company-desc" *ngIf="company.description">
+                {{ company.description }}
+              </p>
+            </div>
+          </div>
+
+          <div class="company-actions">
+            <a
+              *ngIf="company.website"
+              [href]="company.website"
+              target="_blank"
+              class="btn-website">
+              Visit website
+            </a>
+
+            <button
+              class="btn-approve"
+              (click)="approveCompany(company)"
+              [disabled]="approvingId === company.id">
+
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+
+              {{ approvingId === company.id ? 'Approving...' : 'Approve' }}
+            </button>
+          </div>
+        </div>
+
+        <app-empty-state
+          *ngIf="pendingCompanies.length === 0"
+          title="No pending approvals"
+          message="All companies have been reviewed">
+        </app-empty-state>
+
+        <div class="section-label" *ngIf="approvedCompanies.length > 0">
+          Approved companies ({{ approvedCompanies.length }})
+        </div>
+
+        <div
+          class="company-row approved"
+          *ngFor="let company of approvedCompanies; let i = index"
+          [style.animation-delay]="i * 30 + 'ms'">
+
+          <div class="company-left">
+            <div class="company-avatar approved">
+              {{ company.name?.charAt(0) }}
+            </div>
+
+            <div class="company-info">
+              <h4>{{ company.name }}</h4>
+
+              <p class="company-meta">
+                {{ company.industry || 'Industry not specified' }}
+                · {{ company.location }}
+              </p>
+
+              <p class="company-employer">
+                By <strong>{{ company.employerName }}</strong>
+              </p>
+            </div>
+          </div>
+
+          <div class="company-actions">
+            <span class="approved-badge">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Approved
+            </span>
+          </div>
+        </div>
+
+      </ng-container>
+    </div>
+
+    <div class="tab-content" *ngIf="activeTab === 'users'">
+
+      <app-loader
+        *ngIf="usersLoading"
+        label="Loading users...">
+      </app-loader>
+
+      <ng-container *ngIf="!usersLoading">
+
+        <div class="user-search">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#9CA3AF"
+            stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+
+          <input
+            type="text"
+            [(ngModel)]="userSearch"
+            placeholder="Search by name or email..."
+          />
+        </div>
+
+        <app-empty-state
+          *ngIf="users.length === 0"
+          title="No users found"
+          message="Users will appear here once they register">
+        </app-empty-state>
+
+        <div
+          class="user-row"
+          *ngFor="let user of filteredUsers; let i = index"
+          [class.inactive]="!user.isActive"
+          [style.animation-delay]="i * 30 + 'ms'">
+
+          <div class="user-left">
+            <div
+              class="user-avatar"
+              [class.inactive]="!user.isActive">
+              {{ initials(user.name) }}
+            </div>
+
+            <div class="user-info">
+              <h4>{{ user.name }}</h4>
+              <p class="user-email">{{ user.email }}</p>
+
+              <p class="user-joined">
+                Joined {{ formatDate(user.createdAt) }}
+              </p>
+            </div>
+          </div>
+
+          <div class="user-right">
+            <span
+              class="role-badge"
+              [class]="user.role.toLowerCase()">
+              {{ roleLabel(user.role) }}
+            </span>
+
+            <span
+              class="active-badge"
+              *ngIf="user.isActive">
+              Active
+            </span>
+
+            <span
+              class="inactive-badge"
+              *ngIf="!user.isActive">
+              Inactive
+            </span>
+
+            <button
+              class="btn-toggle"
+              [class.deactivate]="user.isActive"
+              [disabled]="togglingId === user.id"
+              (click)="toggleUser(user)">
+              {{ togglingId === user.id
+                ? '...'
+                : user.isActive ? 'Deactivate' : 'Activate' }}
+            </button>
+          </div>
+
+        </div>
+
+      </ng-container>
+    </div>
+
+  </div>
+</div>

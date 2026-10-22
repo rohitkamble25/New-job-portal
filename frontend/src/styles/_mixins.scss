@@ -1,0 +1,183 @@
+@use './tokens' as t;
+
+// Card
+@mixin status-card($accent-color: t.$ink) {
+  background: t.$surface;
+  border: 1px solid t.$border;
+  border-left: 4px solid $accent-color;
+  border-radius: 0 t.$radius-lg t.$radius-lg 0;
+  transition: transform t.$transition-fast, box-shadow t.$transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: t.$shadow-card-hover;
+  }
+}
+
+//plain card
+@mixin card {
+  background: t.$surface;
+  border: 1px solid t.$border;
+  border-radius: t.$radius-lg;
+  transition: box-shadow t.$transition-fast;
+}
+
+@mixin btn-base {
+  font-family: t.$font-body;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: t.$radius-md;
+  cursor: pointer;
+  border: none;
+  transition: background t.$transition-fast,
+              transform 0.1s ease,
+              opacity t.$transition-fast;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: t.$space-2;
+  text-decoration: none;
+
+  &:active { transform: scale(0.98); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+@mixin btn-primary {
+  @include btn-base;
+  background: t.$ink;
+  color: white;
+  height: 42px;
+  padding: 0 t.$space-5;
+
+  &:hover:not(:disabled) { background: t.$ink-light; }
+}
+
+@mixin btn-secondary {
+  @include btn-base;
+  background: transparent;
+  color: t.$ink;
+  border: 1px solid t.$ink;
+  height: 38px;
+  padding: 0 t.$space-4;
+
+  &:hover:not(:disabled) {
+    background: t.$ink;
+    color: white;
+  }
+}
+
+@mixin btn-danger {
+  @include btn-base;
+  background: transparent;
+  color: t.$rejected;
+  border: 1px solid t.$rejected;
+  height: 38px;
+  padding: 0 t.$space-4;
+
+  &:hover:not(:disabled) {
+    background: t.$rejected;
+    color: white;
+  }
+}
+
+@mixin btn-ghost {
+  @include btn-base;
+  background: transparent;
+  color: t.$text-mute;
+  height: 38px;
+  padding: 0 t.$space-4;
+
+  &:hover:not(:disabled) {
+    background: t.$bg;
+    color: t.$text;
+  }
+}
+
+
+
+//Form controls
+@mixin input-base {
+  height: 42px;
+  border: 1px solid t.$border;
+  border-radius: t.$radius-md;
+  padding: 0 t.$space-3;
+  font-size: 14px;
+  font-family: t.$font-body;
+  background: t.$surface;
+  color: t.$text;
+  width: 100%;
+  transition: border-color t.$transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: t.$ink;
+  }
+
+  &::placeholder { color: t.$text-faint; }
+  &:disabled { background: t.$bg; cursor: not-allowed; }
+}
+
+@mixin textarea-base {
+  @include input-base;
+  height: auto;
+  padding: t.$space-3;
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+@mixin select-base {
+  @include input-base;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+//Form group(label + input together)
+@mixin form-group {
+  display: flex;
+  flex-direction: column;
+  gap: t.$space-1;
+
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    color: t.$text-mute;
+  }
+
+  .error-msg {
+    font-size: 12px;
+    color: t.$rejected;
+    margin-top: 2px;
+  }
+}
+
+//status badge colors
+@mixin badge-pending      { background: t.$pending-bg;     color: t.$amber-dark; }
+@mixin badge-reviewed     { background: t.$reviewed-bg;    color: t.$reviewed-color; }
+@mixin badge-shortlisted  { background: t.$shortlisted-bg; color: t.$shortlisted-color; }
+@mixin badge-accepted     { background: t.$success-bg;     color: t.$success; }
+@mixin badge-rejected     { background: t.$rejected-bg;    color: t.$rejected; }
+
+//page section header 
+@mixin section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: t.$text-faint;
+  margin: t.$space-6 0 t.$space-3;
+}
+
+@mixin fade-in($delay: 0s) {
+  animation: fadeInUp 0.35s ease both;
+  animation-delay: $delay;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

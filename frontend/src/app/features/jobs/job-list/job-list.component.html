@@ -1,0 +1,214 @@
+<div class="page">
+  <div class="container">
+
+    <div class="page-header">
+      <div>
+        <h1>Browse jobs</h1>
+        <p class="result-count" *ngIf="!loading">
+          {{ totalElements }} {{ totalElements === 1 ? 'job' : 'jobs' }} found
+          <span *ngIf="hasActiveFilters"> for your filters</span>
+        </p>
+      </div>
+
+      <button
+        class="btn-clear"
+        *ngIf="hasActiveFilters"
+        (click)="clearFilters()">
+        Clear filters
+      </button>
+    </div>
+
+    <div class="layout">
+
+      <aside class="sidebar">
+
+        <div class="filter-card">
+          <h4 class="filter-title">Search</h4>
+
+          <div class="filter-group">
+            <label>Keyword</label>
+            <div class="input-icon">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#9CA3AF"
+                stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+
+              <input
+                type="text"
+                [(ngModel)]="keyword"
+                placeholder="Java, Angular..."
+                (keyup.enter)="search()"
+              />
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label>Location</label>
+            <div class="input-icon">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#9CA3AF"
+                stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+
+              <input
+                type="text"
+                [(ngModel)]="location"
+                placeholder="Pune, Mumbai..."
+                (keyup.enter)="search()"
+              />
+            </div>
+          </div>
+
+          <button
+            class="btn-search-full"
+            (click)="search()">
+            Search
+          </button>
+        </div>
+
+        <div class="filter-card">
+          <h4 class="filter-title">Job type</h4>
+
+          <div class="type-options">
+            <label
+              class="type-option"
+              *ngFor="let type of jobTypes"
+              [class.active]="selectedJobType === type">
+
+              <input
+                type="radio"
+                name="jobType"
+                [value]="type"
+                [(ngModel)]="selectedJobType"
+                (change)="onFilterChange()"
+              />
+
+              {{ jobTypeLabels[type] }}
+            </label>
+
+            <label
+              class="type-option"
+              [class.active]="selectedJobType === ''">
+
+              <input
+                type="radio"
+                name="jobType"
+                value=""
+                [(ngModel)]="selectedJobType"
+                (change)="onFilterChange()"
+              />
+
+              All types
+            </label>
+          </div>
+        </div>
+
+        <div class="filter-card">
+          <h4 class="filter-title">Min. salary (₹/yr)</h4>
+
+          <div class="salary-options">
+            <button
+              class="salary-chip"
+              [class.active]="minSalary === null"
+              (click)="minSalary = null; onFilterChange()">
+              Any
+            </button>
+
+            <button
+              class="salary-chip"
+              [class.active]="minSalary === 300000"
+              (click)="minSalary = 300000; onFilterChange()">
+              ₹3L+
+            </button>
+
+            <button
+              class="salary-chip"
+              [class.active]="minSalary === 500000"
+              (click)="minSalary = 500000; onFilterChange()">
+              ₹5L+
+            </button>
+
+            <button
+              class="salary-chip"
+              [class.active]="minSalary === 1000000"
+              (click)="minSalary = 1000000; onFilterChange()">
+              ₹10L+
+            </button>
+          </div>
+        </div>
+
+      </aside>
+
+      <main class="job-list-main">
+
+        <app-loader
+          *ngIf="loading"
+          label="Finding jobs...">
+        </app-loader>
+
+        <app-empty-state
+          *ngIf="!loading && jobs.length === 0"
+          title="No jobs found"
+          message="Try adjusting your filters or search with different keywords">
+
+          <button
+            class="btn-reset"
+            (click)="clearFilters()">
+            Clear all filters
+          </button>
+
+        </app-empty-state>
+
+        <ng-container *ngIf="!loading && jobs.length > 0">
+          <app-job-card
+            *ngFor="let job of jobs; let i = index"
+            [job]="job"
+            [animationDelay]="i * 50"
+            (apply)="onApply($event)">
+          </app-job-card>
+        </ng-container>
+
+        <div
+          class="pagination"
+          *ngIf="!loading && totalPages > 1">
+
+          <button
+            class="page-btn"
+            [disabled]="currentPage === 0"
+            (click)="goToPage(currentPage - 1)">
+            ← Prev
+          </button>
+
+          <button
+            class="page-btn"
+            *ngFor="let p of pages"
+            [class.active]="p === currentPage"
+            (click)="goToPage(p)">
+            {{ p + 1 }}
+          </button>
+
+          <button
+            class="page-btn"
+            [disabled]="currentPage === totalPages - 1"
+            (click)="goToPage(currentPage + 1)">
+            Next →
+          </button>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+</div>

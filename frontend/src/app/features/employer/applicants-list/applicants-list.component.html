@@ -1,0 +1,246 @@
+<div class="page">
+  <div class="container">
+
+    <app-loader *ngIf="loading" label="Loading applicants..."></app-loader>
+
+    <ng-container *ngIf="!loading">
+
+      <div class="page-header">
+        <div>
+          <div class="breadcrumb">
+            <a routerLink="/employer/dashboard">Dashboard</a>
+            <span>/</span>
+            <span>Applicants</span>
+          </div>
+          <h1>{{ job?.title }}</h1>
+          <p>{{ job?.companyName }} · {{ job?.location }}</p>
+        </div>
+
+        <a routerLink="/employer/dashboard" class="btn-back">
+          ← Back to dashboard
+        </a>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card total">
+          <span class="stat-num">{{ applications.length }}</span>
+          <span class="stat-label">Total applicants</span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-num">{{ countByStatus(ApplicationStatus.PENDING) }}</span>
+          <span class="stat-label">Pending</span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-num">{{ countByStatus(ApplicationStatus.SHORTLISTED) }}</span>
+          <span class="stat-label">Shortlisted</span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-num">{{ countByStatus(ApplicationStatus.ACCEPTED) }}</span>
+          <span class="stat-label">Accepted</span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-num">{{ countByStatus(ApplicationStatus.REJECTED) }}</span>
+          <span class="stat-label">Rejected</span>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <span class="filter-label">Filter by status:</span>
+
+        <button
+          class="filter-chip"
+          [class.active]="filterStatus === ''"
+          (click)="filterStatus = ''">
+          All ({{ applications.length }})
+        </button>
+
+        <button
+          class="filter-chip"
+          *ngFor="let status of allStatuses"
+          [class.active]="filterStatus === status"
+          (click)="filterStatus = status">
+          {{ statusLabels[status] }} ({{ countByStatus(status) }})
+        </button>
+      </div>
+
+      <app-empty-state
+        *ngIf="applications.length === 0"
+        title="No applicants yet"
+        message="Share your job posting to start receiving applications">
+      </app-empty-state>
+
+      <div class="applicants-list" *ngIf="applications.length > 0">
+        <div
+          class="applicant-row"
+          *ngFor="let app of filteredApplications; let i = index"
+          [class.accepted]="app.status === ApplicationStatus.ACCEPTED"
+          [class.rejected]="app.status === ApplicationStatus.REJECTED"
+          [class.shortlisted]="app.status === ApplicationStatus.SHORTLISTED"
+          [class.reviewed]="app.status === ApplicationStatus.REVIEWED"
+          [style.animation-delay]="i * 40 + 'ms'">
+
+          <div class="applicant-left">
+            <div class="applicant-avatar">
+              {{ app.applicantName[0].toUpperCase() }}
+            </div>
+
+            <div class="applicant-info">
+              <h4>{{ app.applicantName }}</h4>
+              <p class="applicant-email">{{ app.applicantEmail }}</p>
+              <p class="applied-date">
+                Applied {{ formatDate(app.appliedAt) }}
+              </p>
+            </div>
+          </div>
+
+          <div class="cover-letter" *ngIf="app.coverLetter">
+            <p class="cover-label">Cover letter</p>
+            <p class="cover-text">{{ app.coverLetter }}</p>
+          </div>
+
+          <div class="no-cover" *ngIf="!app.coverLetter">
+            <p>No cover letter provided</p>
+          </div>
+
+          <div class="applicant-right">
+            <app-status-badge [status]="app.status"></app-status-badge>
+
+            <a
+              *ngIf="app.resumeUrl"
+              [href]="app.resumeUrl"
+              target="_blank"
+              class="btn-resume">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              Resume
+            </a>
+
+            <div class="employer-note" *ngIf="app.employerNotes">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              {{ app.employerNotes }}
+            </div>
+
+            <button
+              class="btn-update"
+              (click)="openStatusModal(app)"
+              [disabled]="updatingId === app.id">
+              Update status
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+</div>
+
+<div
+  class="modal-overlay"
+  *ngIf="showModal"
+  (click)="closeModal()">
+
+  <div
+    class="modal"
+    (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3>Update application status</h3>
+
+      <button
+        class="modal-close"
+        (click)="closeModal()">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="applicant-mini">
+        <div class="mini-avatar">
+          {{ selectedApp?.applicantName?.[0]?.toUpperCase() }}
+        </div>
+
+        <div>
+          <p class="mini-name">{{ selectedApp?.applicantName }}</p>
+          <p class="mini-email">{{ selectedApp?.applicantEmail }}</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>New status</label>
+
+        <div class="status-options">
+          <button
+            type="button"
+            class="status-option"
+            *ngFor="let status of allStatuses"
+            [class.active]="selectedStatus === status"
+            [class]="status.toLowerCase()"
+            (click)="selectedStatus = status">
+            {{ statusLabels[status] }}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">
+          Note to applicant
+          <span class="optional">(optional)</span>
+        </label>
+
+        <textarea
+          id="notes"
+          [(ngModel)]="notes"
+          placeholder="e.g. We'll contact you for an interview next week..."
+          rows="3">
+        </textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        class="btn-cancel"
+        (click)="closeModal()">
+        Cancel
+      </button>
+
+      <button
+        class="btn-confirm"
+        (click)="updateStatus()"
+        [disabled]="updatingId !== null">
+        <span *ngIf="updatingId === null">Update status</span>
+        <span *ngIf="updatingId !== null" class="spinner"></span>
+      </button>
+    </div>
+
+  </div>
+</div>

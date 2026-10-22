@@ -1,0 +1,14 @@
+<div class="toast-wrap">
+  <div
+    class="toast"
+    *ngFor="let toast of toastService.toasts()"
+    [class]="toast.type"
+  >
+    <i class="ti" [class.ti-check]="toast.type === 'success'"
+                   [class.ti-alert-circle]="toast.type === 'error'"
+                   [class.ti-info-circle]="toast.type === 'info'"
+       aria-hidden="true"></i>
+    <span>{{ toast.message }}</span>
+    <button (click)="toastService.dismiss(toast.id)" aria-label="Dismiss">×</button>
+  </div>
+</div>

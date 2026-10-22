@@ -1,0 +1,278 @@
+
+@use 'tokens' as t;
+@use 'mixins' as m;
+
+.page-header {
+  margin-bottom: t.$space-6;
+
+  h1 { margin-bottom: 4px; }
+  p { font-size: 13.5px; color: t.$text-mute; }
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: t.$space-6;
+  align-items: flex-start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: t.$space-4;
+  position: sticky;
+  top: 80px;
+
+  @media (max-width: 900px) {
+    position: static;
+  }
+}
+
+.avatar-card {
+  @include m.card;
+  padding: t.$space-6 t.$space-5;
+  text-align: center;
+  @include m.fade-in;
+}
+
+.big-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, t.$ink, t.$ink-light);
+  color: white;
+  font-family: t.$font-display;
+  font-weight: 600;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto t.$space-4;
+}
+
+.avatar-card h3 {
+  font-size: 16px;
+  margin-bottom: t.$space-2;
+  overflow-wrap: anywhere;
+}
+
+.role-badge {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: t.$radius-pill;
+  background: #EEF3FA;
+  color: t.$ink;
+  margin-bottom: t.$space-3;
+}
+
+.email {
+  font-size: 12.5px;
+  color: t.$text-mute;
+  word-break: break-all;
+}
+
+.resume-card {
+  @include m.card;
+  padding: t.$space-4;
+
+  h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: t.$space-3;
+    padding-bottom: t.$space-2;
+    border-bottom: 1px solid t.$border;
+  }
+}
+
+.resume-uploaded {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: t.$space-2;
+  font-size: 13px;
+  color: t.$success;
+  background: t.$success-bg;
+  padding: t.$space-2 t.$space-3;
+  border-radius: t.$radius-md;
+  margin-bottom: t.$space-3;
+
+  a {
+    color: t.$ink;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.resume-empty {
+  p {
+    font-size: 13px;
+    color: t.$text-faint;
+    text-align: center;
+    margin-bottom: t.$space-3;
+  }
+}
+
+.btn-upload {
+  @include m.btn-secondary;
+  width: 100%;
+  min-height: 38px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: t.$space-2;
+  transition: all t.$transition-fast;
+
+  &.uploading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+.upload-hint {
+  font-size: 11.5px;
+  color: t.$text-faint;
+  text-align: center;
+  margin-top: t.$space-2;
+}
+
+.account-card {
+  @include m.card;
+  padding: t.$space-4;
+
+  h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: t.$space-3;
+    padding-bottom: t.$space-2;
+    border-bottom: 1px solid t.$border;
+  }
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: t.$space-2;
+  padding: t.$space-2 0;
+  border-bottom: 1px solid t.$border;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.info-label {
+  font-size: 12.5px;
+  color: t.$text-mute;
+  flex-shrink: 0;
+}
+
+.info-val {
+  font-size: 13px;
+  font-weight: 500;
+  color: t.$text;
+  text-align: right;
+  max-width: 160px;
+  word-break: break-all;
+}
+
+.status-active {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: t.$success;
+  background: t.$success-bg;
+  padding: 3px 10px;
+  border-radius: t.$radius-pill;
+}
+
+.profile-main {
+  @include m.fade-in;
+  min-width: 0;
+}
+
+.form-card {
+  @include m.card;
+  padding: t.$space-6;
+
+  h3 {
+    font-size: 16px;
+    margin-bottom: t.$space-5;
+    padding-bottom: t.$space-3;
+    border-bottom: 1px solid t.$border;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: t.$space-4;
+  }
+
+  @media (max-width: 640px) {
+    padding: t.$space-4;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: t.$space-4;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  @include m.form-group;
+}
+
+input {
+  @include m.input-base;
+}
+
+textarea {
+  @include m.textarea-base;
+  min-height: 120px;
+}
+
+.hint {
+  font-size: 12px;
+  color: t.$text-faint;
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: t.$space-2;
+}
+
+.btn-save {
+  @include m.btn-primary;
+  min-width: 140px;
+  min-height: 42px;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}

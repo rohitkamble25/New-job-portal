@@ -1,0 +1,144 @@
+<div class="page">
+  <div class="container">
+    <div class="page-header">
+      <div>
+        <h1>Employer dashboard</h1>
+        <p>Welcome back, {{ userName }}</p>
+      </div>
+
+      <div class="header-actions">
+        <a
+*ngIf="!companyLoading && !companyExists"
+  routerLink="/employer/company"
+  class="btn-company">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <rect x="3" y="7" width="18" height="14" rx="2"/>
+            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+          </svg>
+          + Create Company
+        </a>
+
+        <a routerLink="/employer/post-job" class="btn-post">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Post a job
+        </a>
+      </div>
+    </div>
+
+    <div class="stats-row" *ngIf="!loading">
+      <div class="stat-card">
+        <span class="stat-num">{{ totalJobs }}</span>
+        <span class="stat-label">Total jobs</span>
+      </div>
+
+      <div class="stat-card active">
+        <span class="stat-num">{{ activeJobs.length }}</span>
+        <span class="stat-label">Active</span>
+      </div>
+
+      <div class="stat-card inactive">
+        <span class="stat-num">{{ inactiveJobs.length }}</span>
+        <span class="stat-label">Inactive</span>
+      </div>
+    </div>
+
+    <app-loader *ngIf="loading" label="Loading your jobs..."></app-loader>
+
+    <app-empty-state
+      *ngIf="!loading && jobs.length === 0"
+      title="No jobs posted yet"
+      message="Post your first job and start receiving applications">
+      <a routerLink="/employer/post-job" class="btn-first-job">
+        Post your first job
+      </a>
+    </app-empty-state>
+
+    <div class="jobs-section" *ngIf="!loading && jobs.length > 0">
+      <div class="section-label">Your job postings</div>
+
+      <div
+        class="job-row"
+        *ngFor="let job of jobs; let i = index"
+        [class.inactive]="!job.isActive"
+        [style.animation-delay]="i * 50 + 'ms'">
+
+        <div class="job-left">
+          <div class="job-title-row">
+            <h4>{{ job.title }}</h4>
+
+            <span class="status-pill active" *ngIf="job.isActive">
+              Active
+            </span>
+
+            <span class="status-pill inactive" *ngIf="!job.isActive">
+              Inactive
+            </span>
+          </div>
+
+          <p class="job-meta">
+            {{ job.companyName }} ·
+            {{ job.location }} ·
+            {{ jobTypeLabel(job.jobType) }}
+          </p>
+
+          <p class="job-salary">
+            {{ formatSalary(job) }}
+          </p>
+        </div>
+
+        <div class="job-actions">
+          <a
+            [routerLink]="['/employer/applicants', job.id]"
+            class="btn-applicants">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Applicants
+          </a>
+
+          <a
+            [routerLink]="['/employer/edit-job', job.id]"
+            class="btn-edit">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit
+          </a>
+
+          <button
+            class="btn-toggle"
+            [class.deactivate]="job.isActive"
+            [disabled]="togglingId === job.id"
+            (click)="toggleJob(job)">
+            {{ togglingId === job.id
+              ? '...'
+              : job.isActive ? 'Deactivate' : 'Activate' }}
+          </button>
+
+          <button
+            class="btn-delete"
+            [disabled]="deletingId === job.id"
+            (click)="deleteJob(job)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

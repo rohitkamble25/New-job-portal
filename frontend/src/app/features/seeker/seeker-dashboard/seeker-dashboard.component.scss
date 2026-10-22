@@ -1,0 +1,199 @@
+@use 'tokens' as t;
+@use 'mixins' as m;
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: t.$space-6;
+
+  h1 {
+    margin-bottom: 4px;
+  }
+
+  p {
+    font-size: 13.5px;
+    color: t.$text-mute;
+  }
+}
+
+.btn-browse {
+  @include m.btn-secondary;
+  text-decoration: none;
+  height: 38px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: t.$space-4;
+  margin-bottom: t.$space-6;
+
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stat-card {
+  @include m.card;
+  padding: t.$space-4;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-left: 4px solid t.$border-strong;
+
+  &.pending {
+    border-left-color: t.$pending;
+  }
+
+  &.active {
+    border-left-color: t.$reviewed-color;
+  }
+
+  &.success {
+    border-left-color: t.$success;
+  }
+}
+
+.stat-num {
+  font-family: t.$font-display;
+  font-size: 28px;
+  font-weight: 600;
+  color: t.$text;
+}
+
+.stat-label {
+  font-size: 12.5px;
+  color: t.$text-mute;
+}
+
+.app-row {
+  @include m.status-card(t.$ink);
+  @include m.fade-in;
+  padding: t.$space-4 t.$space-5;
+  margin-bottom: t.$space-3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: t.$space-4;
+
+  &.shortlisted {
+    border-left-color: t.$shortlisted-color;
+  }
+
+  &.reviewed {
+    border-left-color: t.$reviewed-color;
+  }
+
+  &.accepted {
+    border-left-color: t.$success;
+  }
+
+  &.rejected {
+    border-left-color: t.$rejected;
+  }
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.app-left {
+  display: flex;
+  align-items: center;
+  gap: t.$space-4;
+  flex: 1;
+  min-width: 0;
+}
+
+.company-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: t.$radius-md;
+  background: linear-gradient(135deg, t.$ink, t.$ink-light);
+  color: white;
+  font-family: t.$font-display;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.app-info {
+  min-width: 0;
+
+  h4 {
+    font-size: 14.5px;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.company {
+  font-size: 13px;
+  color: t.$text-mute;
+  margin-bottom: 2px;
+}
+
+.date {
+  font-size: 12px;
+  color: t.$text-faint;
+}
+
+.app-right {
+  display: flex;
+  align-items: center;
+  gap: t.$space-3;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.employer-note {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: t.$text-mute;
+  background: t.$bg;
+  padding: 4px 10px;
+  border-radius: t.$radius-md;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  svg {
+    flex-shrink: 0;
+    stroke: t.$text-faint;
+  }
+}
+
+.btn-withdraw {
+  @include m.btn-danger;
+  font-size: 12.5px;
+  height: 32px;
+  padding: 0 t.$space-3;
+}
+
+.btn-view-job {
+  @include m.btn-ghost;
+  font-size: 12.5px;
+  height: 32px;
+  padding: 0 t.$space-3;
+  text-decoration: none;
+}
+
+.btn-start {
+  @include m.btn-primary;
+  text-decoration: none;
+  height: 40px;
+  padding: 0 t.$space-6;
+  margin-top: t.$space-4;
+  display: inline-flex;
+  align-items: center;
+}

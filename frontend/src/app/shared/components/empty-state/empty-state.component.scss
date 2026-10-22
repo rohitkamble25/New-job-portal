@@ -1,0 +1,32 @@
+@use 'tokens' as t;
+
+.empty-state {
+  text-align: center;
+  padding: t.$space-10 t.$space-6;
+
+  .icon-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: t.$bg;
+    border: 1px solid t.$border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto t.$space-4;
+
+    svg { stroke: t.$text-faint; }
+  }
+
+  h4 {
+    margin-bottom: t.$space-2;
+    color: t.$text;
+  }
+
+  p {
+    font-size: 13px;
+    color: t.$text-mute;
+    max-width: 320px;
+    margin: 0 auto t.$space-5;
+  }
+}

@@ -1,0 +1,105 @@
+<div class="page">
+  <div class="container">
+
+    <div class="page-header">
+      <div>
+        <h1>My applications</h1>
+        <p>Welcome back, {{ userName }}</p>
+      </div>
+      <a routerLink="/jobs" class="btn-browse">Browse more jobs</a>
+    </div>
+
+    <div class="stats-row" *ngIf="!loading">
+      <div class="stat-card">
+        <span class="stat-num">{{ applications.length }}</span>
+        <span class="stat-label">Total applied</span>
+      </div>
+
+      <div class="stat-card pending">
+        <span class="stat-num">{{ pending.length }}</span>
+        <span class="stat-label">Pending</span>
+      </div>
+
+      <div class="stat-card active">
+        <span class="stat-num">{{ active.length }}</span>
+        <span class="stat-label">In progress</span>
+      </div>
+
+      <div class="stat-card success">
+        <span class="stat-num">{{ closed.length }}</span>
+        <span class="stat-label">Decided</span>
+      </div>
+    </div>
+
+    <app-loader
+      *ngIf="loading"
+      label="Loading your applications...">
+    </app-loader>
+
+    <app-empty-state
+      *ngIf="!loading && applications.length === 0"
+      title="No applications yet"
+      message="Start applying for jobs and track your progress here">
+      <a routerLink="/jobs" class="btn-start">Browse jobs</a>
+    </app-empty-state>
+
+    <ng-container *ngIf="!loading && applications.length > 0">
+
+      <div
+        class="app-row"
+        *ngFor="let app of applications; let i = index"
+        [class.accepted]="app.status === ApplicationStatus.ACCEPTED"
+        [class.rejected]="app.status === ApplicationStatus.REJECTED"
+        [class.shortlisted]="app.status === ApplicationStatus.SHORTLISTED"
+        [class.reviewed]="app.status === ApplicationStatus.REVIEWED"
+        [style.animation-delay]="i * 50 + 'ms'">
+
+        <div class="app-left">
+          <div class="company-avatar">
+            {{ app.companyName[0] }}
+          </div>
+
+          <div class="app-info">
+            <h4>{{ app.jobTitle }}</h4>
+            <p class="company">{{ app.companyName }}</p>
+            <p class="date">Applied {{ formatDate(app.appliedAt) }}</p>
+          </div>
+        </div>
+
+        <div class="app-right">
+          <app-status-badge [status]="app.status"></app-status-badge>
+
+          <div class="employer-note" *ngIf="app.employerNotes">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            {{ app.employerNotes }}
+          </div>
+
+          <button
+            class="btn-withdraw"
+            *ngIf="app.status === ApplicationStatus.PENDING"
+            [disabled]="withdrawingId === app.id"
+            (click)="withdraw(app)">
+            {{ withdrawingId === app.id ? 'Withdrawing...' : 'Withdraw' }}
+          </button>
+
+          <a
+            [routerLink]="['/jobs', app.jobId]"
+            class="btn-view-job">
+            View job
+          </a>
+        </div>
+
+      </div>
+
+    </ng-container>
+
+  </div>
+</div>
