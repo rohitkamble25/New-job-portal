@@ -42,4 +42,4 @@ application-local.properties
 .env.*
 !.env.example
 
-src/main/resources/application.properties
+/jobpotral2.o/src/main/resources/application.properties
