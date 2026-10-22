@@ -2,4 +2,4 @@
 /frontend/.angular/
 /frontend/dist/
 /jobpotral2.o/target/
-/jobpotral2.o/application.properties
+/jobpotral2.o/src/main/resources/application.properties
